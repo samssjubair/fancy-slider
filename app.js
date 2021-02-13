@@ -38,17 +38,20 @@ const getImages = (query) => {
 let slideIndex = 0;
 const selectItem = (event, img) => {
   let element = event.target;
+  
   element.classList.add('added');
  
   let item = sliders.indexOf(img);
   if (item === -1) {
     sliders.push(img);
+    
   } else {
-    alert('Hey, Already added !')
+    element.classList.toggle('added');
   }
 }
 var timer
 const createSlider = () => {
+  console.log('hey');
   // check slider image length
   if (sliders.length < 2) {
     alert('Select at least 2 image.')
@@ -67,7 +70,7 @@ const createSlider = () => {
   document.querySelector('.main').style.display = 'block';
   // hide image aria
   imagesArea.style.display = 'none';
-  const duration = document.getElementById('duration').value || 1000;
+  const duration = parseInt(document.getElementById('duration').value) || 1000;
   sliders.forEach(slide => {
     let item = document.createElement('div')
     item.className = "slider-item";
