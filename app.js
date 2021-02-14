@@ -71,17 +71,34 @@ const getImages = (query) => {
 let slideIndex = 0;
 const selectItem = (event, img) => {
   let element = event.target;
+  console.log(event);
   let item = sliders.indexOf(img);
-  if (item === -1) {
-    event.path[1].classList.toggle('added');
+  if(event.path[0].className=="download-like"){
+    if (item === -1) {
+      event.path[2].classList.toggle('added');
+      
+      sliders.push(img);
+      
+    } else {
+      const newSlider=sliders.filter(element=>element!=img);
+      sliders=[];
+      sliders=newSlider;
+      event.path[2].classList.toggle('added');
+    }
     
-    sliders.push(img);
-    
-  } else {
-    const newSlider=sliders.filter(element=>element!=img);
-    sliders=[];
-    sliders=newSlider;
-    event.path[1].classList.toggle('added');
+  }
+  else{
+    if (item === -1) {
+      event.path[1].classList.toggle('added');
+      
+      sliders.push(img);
+      
+    } else {
+      const newSlider=sliders.filter(element=>element!=img);
+      sliders=[];
+      sliders=newSlider;
+      event.path[1].classList.toggle('added');
+    }
   }
 }
 var timer
