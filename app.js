@@ -15,17 +15,50 @@ const KEY = '15674931-a9d714b6e9d654524df198e00&q';
 
 // show images 
 const showImages = (images) => {
-  imagesArea.style.display = 'block';
-  gallery.innerHTML = '';
-  // show gallery title
-  galleryHeader.style.display = 'flex';
-  images.forEach(image => {
-    let div = document.createElement('div');
-    div.className = 'col-lg-3 col-md-4 col-xs-6 img-item mb-2';
-    div.innerHTML = ` <img class="img-fluid img-thumbnail" onclick=selectItem(event,"${image.webformatURL}") src="${image.webformatURL}" alt="${image.tags}">`;
-    gallery.appendChild(div)
-  })
+  if(images.length==0){
+    noResultFound();
+  }
+  else{
+    imagesArea.style.display = 'block';
+    gallery.innerHTML = '';
+    // show gallery title
+    galleryHeader.style.display = 'flex';
+    images.forEach(image => {
+      let div = document.createElement('div');
+      div.className = 'col-lg-3 col-md-4 col-xs-6 img-item mb-2 image';
+      // let imgDiv=document.createElement('div');
+      // imgDiv.innerHTML = ` <img class="img-fluid img-thumbnail height" onclick="selectItem(event,'${image.webformatURL}')" src="${image.webformatURL}" alt="${image.tags}">`;
+      // let hoverDiv=document.createElement('div');
+      // hoverDiv.className="hover-info"
+      // hoverDiv.innerHTML=`<div class="download-like"><div><i class="fas fa-download"></i>${image.downloads}</div><div > <i class="margin-left fas fa-thumbs-up"></i>${image.likes}</div></div>`
+      // let tagDiv=document.createElement('div');
+      // tagDiv.innerHTML=`  # ${image.tags}`;
+      // div.appendChild(imgDiv);
+      // div.appendChild(hoverDiv);
+      // div.appendChild(tagDiv);
 
+      const insideDiv=`
+      <div onclick="selectItem(event,'${image.webformatURL}')">
+        <div>
+          <img class="img-fluid img-thumbnail height"  src="${image.webformatURL}" alt="${image.tags}">
+        </div>
+        <div class="hover-info ">
+          <div class="download-like">
+            
+              <i class="fas fa-download"></i>${image.downloads}
+              <i class="margin-left fas fa-thumbs-up"></i>${image.likes}
+           
+          </div>
+        </div>
+        <div class="text-align">
+          #${image.tags}
+        </div>
+      </div>
+      `
+      div.innerHTML=insideDiv;
+      gallery.appendChild(div);
+    })
+  }
 }
 
 const getImages = (query) => {
@@ -37,30 +70,30 @@ const getImages = (query) => {
 
 let slideIndex = 0;
 const selectItem = (event, img) => {
+  console.log(event);
   let element = event.target;
-  
-  
- 
   let item = sliders.indexOf(img);
   if (item === -1) {
-    element.classList.toggle('added');
+    event.path[1].classList.toggle('added');
+    console.log(element);
     sliders.push(img);
     
   } else {
     const newSlider=sliders.filter(element=>element!=img);
     sliders=[];
     sliders=newSlider;
-    element.classList.toggle('added');
+    event.path[1].classList.toggle('added');
   }
 }
 var timer
 const createSlider = () => {
-  console.log('hey');
+
   // check slider image length
   if (sliders.length < 2) {
     alert('Select at least 2 image.')
     return;
   }
+  console.log(sliders.length);
   // crate slider previous next area
   sliderContainer.innerHTML = '';
   const prevNext = document.createElement('div');
@@ -91,9 +124,11 @@ const createSlider = () => {
     }, duration);
   }
   else{
-    durationInvalidMessage();
+    // durationInvalidMessage();
+    alert("Duration should be a positive value");
+    window.location.reload();
   }
-  console.log(sliders);
+
 
 }
 
@@ -102,9 +137,9 @@ const changeItem = index => {
   changeSlide(slideIndex += index);
 }
 
+
 // change slide item
 const changeSlide = (index) => {
-
   const items = document.querySelectorAll('.slider-item');
   if (index < 0) {
     slideIndex = items.length - 1
@@ -124,21 +159,26 @@ const changeSlide = (index) => {
 }
 
 searchBtn.addEventListener('click', function () {
+  gallery.innerHTML="";
   document.querySelector('.main').style.display = 'none';
   clearInterval(timer);
+  
   const search = document.getElementById('search');
   
   getImages(search.value)
   sliders.length = 0;
 })
 
+
 sliderBtn.addEventListener('click', function () {
   createSlider()
 })
 
-const durationInvalidMessage=()=>{
-  sliderContainer.style.textAlign='center';
-  sliderContainer.innerHTML = 'Slider duration must be a positive value';
+
+const noResultFound=()=>{
+  const noResultDiv=document.getElementById('no-result');
+  noResultDiv.style.textAlign='center';
+  noResultDiv.innerHTML="No results found, Please try again.";
 }
 
 
