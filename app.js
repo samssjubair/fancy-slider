@@ -71,7 +71,7 @@ const getImages = (query) => {
 let slideIndex = 0;
 const selectItem = (event, img) => {
   let element = event.target;
-  console.log(event);
+  
   let item = sliders.indexOf(img);
   if(event.path[0].className=="download-like"){
     if (item === -1) {
@@ -86,6 +86,18 @@ const selectItem = (event, img) => {
       event.path[2].classList.toggle('added');
     }
     
+  }
+  else if(event.path[0].className=="fas fa-download"){
+    if (item === -1) {
+      event.path[3].classList.toggle('added');
+      sliders.push(img);
+    } else {
+      const newSlider=sliders.filter(element=>element!=img);
+      sliders=[];
+      sliders=newSlider;
+      event.path[3].classList.toggle('added');
+    }
+
   }
   else{
     if (item === -1) {
@@ -109,7 +121,6 @@ const createSlider = () => {
     alert('Select at least 2 image.')
     return;
   }
-  console.log(sliders.length);
   // crate slider previous next area
   sliderContainer.innerHTML = '';
   const prevNext = document.createElement('div');
